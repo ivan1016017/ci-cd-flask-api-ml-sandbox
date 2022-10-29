@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #container {
+      height: 700px;
+      min-width: 700px;
+      max-width: 1200px;
+      margin: 0 auto;
+  }
+
+  #container2 {
+    height: 700px;
+    min-width: 700px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+  
+  .loading {
+      margin-top: 10em;
+      text-align: center;
+      color: gray;
+  }
+
+  .aParent div {
+    float: left;
+    clear: none;    
+  }
+
+  </style>
+</head>
+<body>
+
+    <div class="aParent">
+        <div id="container"></div>
+        <div id="container2"></div>
+    </div>
+
+
+
+  
+
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  
+  
+
+  <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+
+<script>
+
+  var list_clients = {{context.list_clients|tojson}}
+  var peopleCreditcardApproved = {}
+  var creditcardDefaults = {}
+
+  const tempStates = [
+  ['mx-3622', 10000], ['mx-bc', 1100], ['mx-bs', 12], ['mx-so', 13],
+  ['mx-cl', 14], ['mx-na', 15], ['mx-cm', 16], ['mx-qr', 17],
+  ['mx-mx', 18], ['mx-mo', 19], ['mx-df', 2000], ['mx-qt', 21],
+  ['mx-tb', 22], ['mx-cs', 23], ['mx-nl', 24], ['mx-si', 25],
+  ['mx-ch', 26], ['mx-ve', 2700], ['mx-za', 28], ['mx-ag', 29],
+  ['mx-ja', 30], ['mx-mi', 31], ['mx-oa', 32], ['mx-pu', 33],
+  ['mx-gr', 34], ['mx-tl', 35], ['mx-tm', 36], ['mx-co', 37],
+  ['mx-yu', 38], ['mx-dg', 39], ['mx-gj', 40], ['mx-sl', 41],
+  ['mx-hg', 0]]
+
+    for (var list of tempStates){
+        peopleCreditcardApproved[list[0]] = 0
+        creditcardDefaults[list[0]] = 0
+    }
+
+
+  
+  
+
+
+  
+
+ 
+
+  (async () => {
+
+    const topology = await fetch(
+        'https://code.highcharts.com/mapdata/countries/mx/mx-all.topo.json'
+    ).then(response => response.json());
+
+    // Prepare demo data. The data is joined to map using value of 'hc-key'
+    // property by default. See API docs for 'joinBy' for more info on linking
+    // data and map.
+
+    for (let client of list_clients){
+        peopleCreditcardApproved[client[13]] += client[19]
+        let fraudCases = (client[19] === 0) ? 1:0
+        creditcardDefaults[client[13]] += fraudCases
+    }
+
+    let maxArrayApproved = []
+    let maxArrayNoApproved = []
+
+
+    for (let value in peopleCreditcardApproved){
+        maxArrayApproved.push(peopleCreditcardApproved[value])
+    }
+
+    
+    for (let value in creditcardDefaults){
+        maxArrayNoApproved.push(creditcardDefaults[value])
+    }
+
+    let maxApprovedByRegion = Math.max.apply(null,maxArrayApproved)
+    let maxNoApprovedByRegion = Math.max.apply(null,maxArrayNoApproved)
+    
+    const data = [
+        ['mx-3622', peopleCreditcardApproved['mx-3622']], ['mx-bc', peopleCreditcardApproved['mx-bc']], ['mx-bs', peopleCreditcardApproved['mx-bs']], ['mx-so', peopleCreditcardApproved['mx-so']],
+        ['mx-cl', peopleCreditcardApproved['mx-cl']], ['mx-na', peopleCreditcardApproved['mx-na']], ['mx-cm', peopleCreditcardApproved['mx-cm']], ['mx-qr', peopleCreditcardApproved['mx-qr']],
+        ['mx-mx', peopleCreditcardApproved['mx-mx']], ['mx-mo', peopleCreditcardApproved['mx-mo']], ['mx-df', peopleCreditcardApproved['mx-df']], ['mx-qt', peopleCreditcardApproved['mx-qt']],
+        ['mx-tb', peopleCreditcardApproved['mx-tb']], ['mx-cs', peopleCreditcardApproved['mx-cs']], ['mx-nl', peopleCreditcardApproved['mx-nl']], ['mx-si', peopleCreditcardApproved['mx-si']],
+        ['mx-ch', peopleCreditcardApproved['mx-ch']], ['mx-ve', peopleCreditcardApproved['mx-ve']], ['mx-za', peopleCreditcardApproved['mx-za']], ['mx-ag', peopleCreditcardApproved['mx-ag']],
+        ['mx-ja', peopleCreditcardApproved['mx-ja']], ['mx-mi', peopleCreditcardApproved['mx-mi']], ['mx-oa', peopleCreditcardApproved['mx-oa']], ['mx-pu', peopleCreditcardApproved['mx-pu']],
+        ['mx-gr', peopleCreditcardApproved['mx-gr']], ['mx-tl', peopleCreditcardApproved['mx-tl']], ['mx-tm', peopleCreditcardApproved['mx-tm']], ['mx-co', peopleCreditcardApproved['mx-co']],
+        ['mx-yu', peopleCreditcardApproved['mx-yu']], ['mx-dg', peopleCreditcardApproved['mx-dg']], ['mx-gj', peopleCreditcardApproved['mx-gj']], ['mx-sl', peopleCreditcardApproved['mx-sl']],
+        ['mx-hg', peopleCreditcardApproved['mx-hg']]
+    ];
+
+    const dataDefault = [
+    ['mx-3622', creditcardDefaults['mx-3622']], ['mx-bc', creditcardDefaults['mx-bc']], ['mx-bs', creditcardDefaults['mx-bs']], ['mx-so', creditcardDefaults['mx-so']],
+    ['mx-cl', creditcardDefaults['mx-cl']], ['mx-na', creditcardDefaults['mx-na']], ['mx-cm', creditcardDefaults['mx-cm']], ['mx-qr', creditcardDefaults['mx-qr']],
+    ['mx-mx', creditcardDefaults['mx-mx']], ['mx-mo', creditcardDefaults['mx-mo']], ['mx-df', creditcardDefaults['mx-df']], ['mx-qt', creditcardDefaults['mx-qt']],
+    ['mx-tb', creditcardDefaults['mx-tb']], ['mx-cs', creditcardDefaults['mx-cs']], ['mx-nl', creditcardDefaults['mx-nl']], ['mx-si', creditcardDefaults['mx-si']],
+    ['mx-ch', creditcardDefaults['mx-ch']], ['mx-ve', creditcardDefaults['mx-ve']], ['mx-za', creditcardDefaults['mx-za']], ['mx-ag', creditcardDefaults['mx-ag']],
+    ['mx-ja', creditcardDefaults['mx-ja']], ['mx-mi', creditcardDefaults['mx-mi']], ['mx-oa', creditcardDefaults['mx-oa']], ['mx-pu', creditcardDefaults['mx-pu']],
+    ['mx-gr', creditcardDefaults['mx-gr']], ['mx-tl', creditcardDefaults['mx-tl']], ['mx-tm', creditcardDefaults['mx-tm']], ['mx-co', creditcardDefaults['mx-co']],
+    ['mx-yu', creditcardDefaults['mx-yu']], ['mx-dg', creditcardDefaults['mx-dg']], ['mx-gj', creditcardDefaults['mx-gj']], ['mx-sl', creditcardDefaults['mx-sl']],
+    ['mx-hg', creditcardDefaults['mx-hg']]
+];
+
+    // Create the chart
+    Highcharts.mapChart('container', {
+        chart: {
+            map: topology
+        },
+
+        title: {
+            text: 'Credits No Approved'
+        },
+
+        subtitle: {
+            text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/mx/mx-all.topo.json">Mexico</a>'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+            min: 0,
+            minColor: '#f7f0f0',
+            maxColor: '#ed2121', 
+            max: maxNoApprovedByRegion
+        },
+
+        series: [{
+            data: dataDefault,
+            name: 'Random data',
+            states: {
+                hover: {
+                    color: '#ebdb34'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }]
+    });
+
+        // Create the chart
+    Highcharts.mapChart('container2', {
+        chart: {
+            map: topology
+        },
+
+        title: {
+            text: 'Credits Approved'
+        },
+
+        subtitle: {
+            text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/mx/mx-all.topo.json">Mexico</a>'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+            min: 0,
+            minColor: '#E6E7E8',
+            maxColor: '#005645', 
+            max: maxApprovedByRegion
+        },
+
+        series: [{
+            data: data,
+            name: 'Random data',
+            states: {
+                hover: {
+                    color: '#ebdb34'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }]
+    });
+
+})();
+
+
+
+</script>
+
+
+  
+</body>
+</html>
