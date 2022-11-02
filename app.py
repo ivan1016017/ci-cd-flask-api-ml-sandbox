@@ -3,7 +3,8 @@ import pickle
 import numpy as np 
 import json
 
-# version 4 for week 04 MISO
+# version for week 04 MISO
+# Student Ivan Dario Penaloza 
 app = Flask(__name__)
 
 optimal_light_gbm_rscv_v1 = pickle.load(open('optimal_light_gbm_rscv_v1.pkl','rb'))
